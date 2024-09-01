@@ -355,7 +355,7 @@ Multiple constructors are provided to initialize the iterator using values or po
 
 ## License
 
-This module is provided under the MIT License. Feel free to use, modify, and distribute it as needed.
+This module is provided under the GPL-V3.0 License. Feel free to use, modify, and distribute it as needed.
 
 ## Contributions
 
