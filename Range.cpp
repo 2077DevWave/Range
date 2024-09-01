@@ -2,7 +2,7 @@
 #include <iostream>
 #endif
 #define __RTT template<typename R> // Macro defining a template alias for types used in the Range class
-#define NULL_Range Range<R>(0,0)   // Macro defining a default null range value
+#define NULL_Range Range<R>(R(),R())   // Macro defining a default null range value
 
 __RTT
 class Range
