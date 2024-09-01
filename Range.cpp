@@ -28,36 +28,34 @@ public:
             return n;
         }
 
+        void initValues(R *Begin, R *End){this->Begin = Begin; this->End = End; this->current = *Begin;}
+        void initValues(R Begin, R End){R *B = (R*) malloc(sizeof(R)), *E = (R*) malloc(sizeof(R));*B = Begin; *E = End;initValues(B,E);}
     public:
         /*
         @brief Various constructors for initializing the iterator.
         @param Begin The starting value of the range.
         @param End The ending value of the range.
         */
-        Iterator(R Begin, R End) {
-            R *B = (R*) malloc(sizeof(R)), *E = (R*) malloc(sizeof(R));
-            *B = Begin; *E = End;
-            this->Begin = B; this->End = E; current = Begin;
-        }
+        Iterator(R Begin, R End) {initValues(Begin,End);}
 
         /*
         @brief Constructor for initializing the iterator using pointers.
         @param Begin Pointer to the starting value of the range.
         @param End Pointer to the ending value of the range.
         */
-        Iterator(R* Begin, R* End) { this->Begin = Begin; this->End = End; this->current = *Begin; }
+        Iterator(R* Begin, R* End) {initValues(Begin,End);}
 
         /*
         @brief Constructor for initializing the iterator using a Range object.
         @param r A Range object.
         */
-        Iterator(Range r) { Iterator(r.Begin, r.End); }
+        Iterator(Range r) { initValues(r.Begin, r.End); }
 
         /*
         @brief Constructor for initializing the iterator using a Range pointer.
         @param r A pointer to a Range object.
         */
-        Iterator(Range* r) { Iterator(r->Begin, r->End); }
+        Iterator(Range* r) { initValues(r->Begin, r->End); }
 
         /*
         @brief Constructor for initializing the iterator with a step size.
@@ -65,7 +63,7 @@ public:
         @param End The ending value of the range.
         @param step The step size for iteration.
         */
-        Iterator(R Begin, R End, R step) { Iterator(Begin, End); this->step = step; }
+        Iterator(R Begin, R End, R step) { initValues(Begin, End); this->step = step; }
 
         /*
         @brief Constructor for initializing the iterator using pointers with a step size.
@@ -73,26 +71,32 @@ public:
         @param End Pointer to the ending value of the range.
         @param step The step size for iteration.
         */
-        Iterator(R* Begin, R* End, R step) { Iterator(Begin, End); this->step = step; }
+        Iterator(R* Begin, R* End, R step) { initValues(Begin, End); this->step = step; }
 
         /*
         @brief Constructor for initializing the iterator using a Range object with a step size.
         @param r A Range object.
         @param step The step size for iteration.
         */
-        Iterator(Range r, R step) { Iterator(r.Begin, r.End); this->step = step; }
+        Iterator(Range r, R step) { initValues(r.Begin, r.End); this->step = step; }
 
         /*
         @brief Constructor for initializing the iterator using a Range pointer with a step size.
         @param r A pointer to a Range object.
         @param step The step size for iteration.
         */
-        Iterator(Range* r, R step) { Iterator(r->Begin, r->End); this->step = step; }
+        Iterator(Range* r, R step) { initValues(r->Begin, r->End); this->step = step; }
 
         /*
         @brief Destructor for the Iterator class.
         */
         ~Iterator() {}  
+
+        /*
+        @brief Overloaded assignment operator to set this Iterator equal to t.
+        @param t The Iterator to assign to this Iterator.
+        */
+       void operator=(Range::Iterator t){this->Begin = t.Begin; this->End = t.End; this->current = t.current; this->step = t.step;}
 
         /*
         @brief Overloaded operator to increment the iterator by step size.
@@ -614,7 +618,7 @@ __RTT typename Range<R>::Iterator Range<R>::BeginIter(R step)
 __RTT typename Range<R>::Iterator Range<R>::EndIter(R step)
 {
     // Returns an iterator with a specific step size starting at the end of the range
-    Range<R>::Iterator temp = BeginIter(step);
+    Range<R>::Iterator temp = Range<R>::Iterator(this->Begin, this->End, step);
     temp += (R)(this->length() / step + 1);  // Move iterator to the end
     return temp;
 }
